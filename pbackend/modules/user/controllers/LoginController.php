@@ -46,18 +46,19 @@ class LoginController extends ActiveController
             ],
         ];
         
-       /* $behaviors['verbs'] = [
+       $behaviors['verbs'] = [
               'class' => \yii\filters\VerbFilter::className(),
               'actions' => [
-                  'index'  => ['post'],
+                  //'index'  => ['post'],
                   'view'   => ['get'],
                   'create' => ['post'],
                   'update' => ['put'],
                   'delete' => ['delete'],
                   'login'  => ['post'],
+                  'userlogin'  => ['post'],
                   'me'    =>  ['get', 'post'],
               ],
-          ];*/
+          ];
         
         $auth = $behaviors['authenticator'];
         unset($behaviors['authenticator']);
@@ -75,7 +76,7 @@ class LoginController extends ActiveController
         // re-add authentication filter
         $behaviors['authenticator'] = $auth;
         // avoid authentication on CORS-pre-flight requests (HTTP OPTIONS method)
-        $behaviors['authenticator']['except'] = ['index','options', 'login', 
+        $behaviors['authenticator']['except'] = ['userlogin','options', 'login', 
             'signup', 'confirm', 'password-reset-request', 'password-reset-token-verification', 'password-reset'];
 
 
@@ -101,7 +102,7 @@ class LoginController extends ActiveController
         return $behaviors;
     }
     
-    public function actionIndex() {
+    public function actionUserlogin() {
         
         $model = new LoginForm();
         $model->roles = [

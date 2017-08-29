@@ -14,7 +14,10 @@ return [
     'modules' => [
         'user' => [
             'class' => 'app\modules\user\Module'
-        ]
+        ],
+        'bucket' => [
+            'class' => 'app\modules\bucket\Module',
+        ],
     ],
     'components' => [
         'authManager' => [
@@ -66,17 +69,24 @@ return [
             'showScriptName' => false,
             'rules' => [
                 ['class' => 'yii\rest\UrlRule',               
-                    'controller'    => 'user/user',
+                    'controller'    => 'user/login',
+                    'pluralize'     => false,
+                    'tokens' => [
+                        '{id}'  => '<id:\d+>',
+                    ],
+                ],
+                 ['class' => 'yii\rest\UrlRule',               
+                    'controller'    => 'bucket/indexme',
                     'pluralize'     => false,
                     'tokens' => [
                         '{id}'  => '<id:\d+>',
                     ],
                 ],
                 ['class' => 'yii\web\UrlRule', 'pattern' => 'site/<action>', 'route' => 'site/<action>'],
-                ['class' => 'yii\rest\UrlRule', 'controller' => 'user'],
+                ['class' => 'yii\rest\UrlRule', 'controller' => 'login'],
                 [
                     'class'         => 'yii\rest\UrlRule',
-                    'controller'    => 'admin/user',
+                    'controller'    => 'user/login',
                     'pluralize'     => false,
                     'tokens' => [
                             '{id}'             => '<id:\d+>',
@@ -84,7 +94,8 @@ return [
                     'extraPatterns' => [
                             'GET me'            =>  'direct',
                             'OPTIONS {id}'      =>  'options',
-                            'POST login'        =>  'login',
+                            'POST login'        =>  'index',
+                            //'POST login'        =>  'login',
                             'OPTIONS login'     =>  'options',
                             'POST signup'       =>  'signup',
                             'OPTIONS signup'    =>  'options',

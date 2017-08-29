@@ -120,47 +120,47 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface {
             'updated_at',
         ];
 
-        // If role is staff and admin, then return permissions
-        if ($this->role == self::ROLE_STAFF || $this->role == self::ROLE_ADMIN) {
-            $fields['permissions'] = function() {
-                $authManager = Yii::$app->authManager;
-
-                /** @var Permission[] $availablePermissions */
-                $availablePermissions = $authManager->getPermissions();
-
-
-                /** @var array $tmpPermissions to store permissions assigned to the staff */
-                $tmpPermissions = [];
-                /** @var Permission[] $userPermissions */
-                $userPermissions = $authManager->getPermissionsByUser($this->getId());
-                if (!empty($availablePermissions)) {
-                    /**
-                     * @var string $permissionKey
-                     * @var Permission $permission
-                     */
-                    foreach ($availablePermissions as $permissionKey => $permission) {
-                        $tmpPermission = [
-                            'name' => $permission->name,
-                            'description' => $permission->description,
-                            'checked' => false,
-                        ];
-
-                        if (!empty($userPermissions)) {
-                            foreach ($userPermissions as $userPermissionKey => $userPermission) {
-                                if ($userPermission->name == $permission->name) {
-                                    $tmpPermission['checked'] = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        $tmpPermissions[] = $tmpPermission;
-                    }
-                }
-
-                return $tmpPermissions;
-            };
-        }
+//        // If role is staff and admin, then return permissions
+//        if ($this->role == self::ROLE_STAFF || $this->role == self::ROLE_ADMIN) {
+//            $fields['permissions'] = function() {
+//                $authManager = Yii::$app->authManager;
+//
+//                /** @var Permission[] $availablePermissions */
+//                $availablePermissions = $authManager->getPermissions();
+//
+//
+//                /** @var array $tmpPermissions to store permissions assigned to the staff */
+//                $tmpPermissions = [];
+//                /** @var Permission[] $userPermissions */
+//                $userPermissions = $authManager->getPermissionsByUser($this->getId());
+//                if (!empty($availablePermissions)) {
+//                    /**
+//                     * @var string $permissionKey
+//                     * @var Permission $permission
+//                     */
+//                    foreach ($availablePermissions as $permissionKey => $permission) {
+//                        $tmpPermission = [
+//                            'name' => $permission->name,
+//                            'description' => $permission->description,
+//                            'checked' => false,
+//                        ];
+//
+//                        if (!empty($userPermissions)) {
+//                            foreach ($userPermissions as $userPermissionKey => $userPermission) {
+//                                if ($userPermission->name == $permission->name) {
+//                                    $tmpPermission['checked'] = true;
+//                                    break;
+//                                }
+//                            }
+//                        }
+//
+//                        $tmpPermissions[] = $tmpPermission;
+//                    }
+//                }
+//
+//                return $tmpPermissions;
+//            };
+//        } 
 
 
         return $fields;
