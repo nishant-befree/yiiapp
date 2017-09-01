@@ -3,9 +3,10 @@
 namespace app\modules\user\controllers;
 
 use Yii;
-use yii\filters\auth\HttpBasicAuth;
+//use yii\filters\auth\HttpBasicAuth;
 use app\modules\user\models\User;
 use yii\rest\ActiveController;
+
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -19,11 +20,29 @@ class UserController extends ActiveController
     public function behaviors()
     {
         $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBasicAuth::className(),
-            'auth' => [ 'app\modules\user\models\User', 'httpBasicAuth'],
-            'only' => [ 'delete', 'update', 'create', 'index']
+//        $behaviors['authenticator'] = [
+//            'class' => HttpBasicAuth::className(),
+//            'auth' => [ 'app\modules\user\models\User', 'httpBasicAuth'],
+//            'only' => [ 'delete', 'update', 'create', 'index']
+//        ];
+       
+//       $behaviors['authenticator'] = [
+//                'class' => CompositeAuth::className(),
+//                'authMethods' => [
+//                    HttpBearerAuth::className(),
+//                ],
+//
+//        ];
+         // add CORS filter
+        $behaviors['corsFilter'] = [
+            'class' => \yii\filters\Cors::className(),
+            'cors' => [
+                'Origin' => ['*'],
+                'Access-Control-Request-Method' => ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS','HEAD'],
+                'Access-Control-Request-Headers' => ['*'],
+            ],
         ];
+
         return $behaviors;
     }
     
