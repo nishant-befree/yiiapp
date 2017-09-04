@@ -234,7 +234,33 @@ ORDER BY tb.is_practice_urgent DESC, tb.is_urgent DESC, tb.is_knockback DESC, le
     }
     
     public function actionMytask() {
+        $SQL = "SELECT ta.assignee_id, us.first_name,us.last_name,
+             Task.task_stage_id as task_stage_id,
+             Task.task_name as task_name,
+             p.company_name as practiceName,
+             jt.name as jobTypeName,
+             typ.task_type_name as taskTypeName,
+             typ.id as taskTypeId,
+             jt.id as jobTypeId,
+             j.service_division as jobServiceDivision,
+            (CASE
+                WHEN t.job_milestone_date IS NULL THEN t.task_milestone_date
+                WHEN t.job_milestone_date = '0000-00-00 00:00:00' THEN t.task_milestone_date
+                WHEN t.task_milestone_date < t.job_milestone_date THEN t.task_milestone_date
+                WHEN t.task_milestone_date > t.job_milestone_date THEN t.job_milestone_date
+                WHEN t.task_milestone_date = t.job_milestone_date THEN t.job_milestone_date
+                ELSE t.task_milestone_date
+            END) AS lessDate FROM `turnaround_buckets` `t`  JOIN task Task ON Task.id = t.task_id LEFT JOIN task_type typ ON typ.id = Task.task_type_id JOIN jobs j ON j.job_id = Task.job_id LEFT JOIN adhoc_template_task adhocTask ON adhocTask.id = Task.adhoc_task_id JOIN practices p ON Task.practice_id = p.id  JOIN clients c ON Task.client_id = c.id  LEFT JOIN job_type jt ON Task.job_type_id = jt.id LEFT JOIN `task_assign` AS `ta` ON Task.id = ta.task_id LEFT JOIN `practices_users` AS `pu` ON pu.practice_id = Task.practice_id LEFT JOIN `users` AS `us` ON us.id = ta.assignee_id WHERE (((((ta.id IS NOT NULL) AND (Task.task_status_id NOT IN(2,3))) AND (j.is_paused='0')) AND (typ.id !='25')) AND (t.task_id >='0')) AND (t.is_active='1') GROUP BY Task.id ORDER BY 
+            t.is_practice_urgent DESC,
+            t.is_urgent DESC,
+            t.is_knockback DESC,
+            lessDate ASC,
+            t.created_on ASC";
         
+        $connection = Yii::$app->getDb();
+        $command = $connection->createCommand($SQL);
+        $result = $command->queryAll();
+        return $result;
     }
      public function actionUnassigntask() {
          $SQL = "SELECT
